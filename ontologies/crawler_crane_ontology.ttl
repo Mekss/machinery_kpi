@@ -1,0 +1,197 @@
+@prefix ex: <urn:crawlercrane-ontology#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+ex:Boom_Hoist_Drum a ex:CraneComponent ;
+    rdfs:label "Boom Hoist Drum"^^xsd:string ;
+    rdfs:comment "A specialized drum used to raise and lower the crane’s boom via hydraulic power, enabling angle adjustments."^^xsd:string ;
+    ex:ComponentOf ex:Hydraulic_System ;
+    ex:DependsOn ex:Hydraulic_System ;
+    ex:maintenanceIntervalCheck "800"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxBoomAngle "88"^^xsd:float ;
+    ex:maxBoomAngleUnit "°"^^xsd:string .
+
+ex:ComponentOf rdfs:comment "Hydraulic Pumps supply the Hydraulic System with fluid power."^^xsd:string,
+        "Load Hoist Drums are powered by, and thus form part of, the Hydraulic System."^^xsd:string,
+        "Side Frames attach to the Carbody for stability and mounting of tracks."^^xsd:string,
+        "The Boom Hoist Drum is a subcomponent of the Hydraulic System, enabling boom angle adjustments."^^xsd:string,
+        "The Carbody (central frame) is part of the Lower Structure."^^xsd:string,
+        "The Conventional Tube Boom is a primary lifting attachment of the crane."^^xsd:string,
+        "The Counterweight is mounted on the Upper Structure, providing balance."^^xsd:string,
+        "The Engine is part of (a component of) the overall crane."^^xsd:string,
+        "The Hydraulic System is a core subsystem of the crane."^^xsd:string,
+        "The Lower Structure (carbody, side frames) is part of the crane’s base."^^xsd:string,
+        "The Luffing Jib attaches to the Luffing Boom for additional hoisting configurations."^^xsd:string,
+        "The Operator Cab is housed on the Upper Structure."^^xsd:string,
+        "The Swing System’s motors and gears rely on the hydraulic power source; it is part of the Hydraulic System."^^xsd:string,
+        "The Tubular Jib extends/attaches to the Tube Boom for added reach or lift angles."^^xsd:string,
+        "The Upper Structure (including engine, cab, counterweights) is part of the crane."^^xsd:string .
+
+ex:Counterweight a ex:CraneComponent ;
+    rdfs:label "Counterweight"^^xsd:string ;
+    rdfs:comment "Removable weights installed on the upper structure to balance and stabilize loads, especially when working at greater radii."^^xsd:string ;
+    ex:ComponentOf ex:Upper_Structure ;
+    ex:DependsOn ex:Jack_System ;
+    ex:maintenanceIntervalCheck "3000"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxCounterweight "62"^^xsd:float ;
+    ex:maxCounterweightUnit "470 kg"^^xsd:string .
+
+ex:DependsOn rdfs:comment "Counterweight removal and installation rely on jacks; if the Jack System is serviced, Counterweight functionality should be inspected."^^xsd:string,
+        "Load Hoist Drums rely on hydraulic power; a Hydraulic System service calls for inspection of Hoist Drums."^^xsd:string,
+        "The Boom Hoist Drum depends on hydraulic function; if Hydraulic System is repaired, Boom Hoist Drum operation must be verified."^^xsd:string,
+        "The Engine requires a fuel supply; if the Fuel Tank is serviced or replaced, the Engine should also be checked."^^xsd:string,
+        "The Hydraulic System is powered by the Engine; significant Engine maintenance may require re-checking hydraulic components."^^xsd:string,
+        "The Luffing Jib’s pivot and lift capabilities depend on the Luffing Boom; if the Luffing Boom is serviced, the Jib must be checked."^^xsd:string,
+        "The Swing System depends on hydraulic flow; servicing the Hydraulic System requires testing Swing System performance."^^xsd:string .
+
+ex:Hydraulic_Pumps a ex:CraneComponent ;
+    rdfs:label "Hydraulic Pumps"^^xsd:string ;
+    rdfs:comment "Variable and fixed displacement pumps that supply hydraulic flow to different crane functions, operating at specific pressures and flow rates."^^xsd:string ;
+    ex:ComponentOf ex:Hydraulic_System ;
+    ex:maintenanceIntervalCheck "1000"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxFlowRate "266"^^xsd:float ;
+    ex:maxFlowRateUnit "L/min"^^xsd:string .
+
+ex:Load_Hoist_Drums a ex:CraneComponent ;
+    rdfs:label "Load Hoist Drums"^^xsd:string ;
+    rdfs:comment "Cylindrical drums driven by hydraulic motors, used for lifting and lowering the load line through wire rope winding."^^xsd:string ;
+    ex:ComponentOf ex:Hydraulic_System ;
+    ex:DependsOn ex:Hydraulic_System ;
+    ex:maintenanceIntervalCheck "1000"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxWireRopeDiameter "22"^^xsd:float ;
+    ex:maxWireRopeDiameterUnit "mm"^^xsd:string .
+
+ex:Luffing_Jib a ex:CraneComponent ;
+    rdfs:label "Luffing Jib"^^xsd:string ;
+    rdfs:comment "An optional attachment mounted to a luffing boom, providing extended reach and additional lift configurations; pivots independently for complex lifting tasks."^^xsd:string ;
+    ex:ComponentOf ex:Luffing_Boom ;
+    ex:DependsOn ex:Luffing_Boom ;
+    ex:maintenanceIntervalCheck "1500"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxLuffingJibLength "54.86"^^xsd:float ;
+    ex:maxLuffingJibLengthUnit "m"^^xsd:string .
+
+ex:Operator_Cab a ex:CraneComponent ;
+    rdfs:label "Operator Cab"^^xsd:string ;
+    rdfs:comment "An enclosed module housing the crane controls, instrumentation, seating, and climate control for the operator."^^xsd:string ;
+    ex:ComponentOf ex:Upper_Structure ;
+    ex:maintenanceIntervalCheck "1500"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxHeaterOutput "5.49"^^xsd:float ;
+    ex:maxHeaterOutputUnit "kW"^^xsd:string .
+
+ex:Rated_Capacity_Limiter_System a ex:CraneComponent ;
+    rdfs:label "Rated Capacity Limiter System"^^xsd:string ;
+    rdfs:comment "A system monitoring load weight, boom angle, and crane configuration to prevent overloading by alerting and restricting crane movement when capacity limits are approached or exceeded."^^xsd:string ;
+    ex:ComponentOf ex:HSL_Crawler_Crane_Link-Belt_Cranes_248_HSL ;
+    ex:maintenanceIntervalCheck "750"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:overloadAlarmThreshold "100"^^xsd:float ;
+    ex:overloadAlarmThresholdUnit "% rated capacity"^^xsd:string .
+
+ex:Side_Frames a ex:CraneComponent ;
+    rdfs:label "Side Frames"^^xsd:string ;
+    rdfs:comment "Steel frames mounted on the carbody, housing tracks and rollers, providing lateral stability and mobility."^^xsd:string ;
+    ex:ComponentOf ex:Carbody ;
+    ex:maintenanceAfterTravel "200"^^xsd:float ;
+    ex:maintenanceAfterTravelUnit "km"^^xsd:string ;
+    ex:maintenanceIntervalCheck "2000"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxTrackGauge "5.74"^^xsd:float ;
+    ex:maxTrackGaugeUnit "m"^^xsd:string .
+
+ex:Swing_System a ex:CraneComponent ;
+    rdfs:label "Swing System"^^xsd:string ;
+    rdfs:comment "A mechanism consisting of hydraulic motors and gear reduction that allows the crane’s upper structure to rotate (swing) 360° around the turntable bearing."^^xsd:string ;
+    ex:ComponentOf ex:Hydraulic_System ;
+    ex:DependsOn ex:Hydraulic_System ;
+    ex:maintenanceIntervalCheck "1200"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxSwingSpeed "1.7"^^xsd:float ;
+    ex:maxSwingSpeedUnit "rpm"^^xsd:string .
+
+ex:Tubular_Jib a ex:CraneComponent ;
+    rdfs:label "Tubular Jib"^^xsd:string ;
+    rdfs:comment "A separate lattice attachment that can be added to the main tube boom to extend reach or allow different lifting angles."^^xsd:string ;
+    ex:ComponentOf ex:Conventional_Tube_Boom ;
+    ex:maintenanceIntervalCheck "1200"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxJibLength "30.48"^^xsd:float ;
+    ex:maxJibLengthUnit "m"^^xsd:string .
+
+ex:Carbody a ex:CraneComponent ;
+    rdfs:label "Carbody"^^xsd:string ;
+    rdfs:comment "The central frame of the lower structure providing the main support and connection points for the side frames and jacking system."^^xsd:string ;
+    ex:ComponentOf ex:Lower_Structure ;
+    ex:maintenanceIntervalCheck "2000"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:minCarbodyClearance "0.47"^^xsd:float ;
+    ex:minCarbodyClearanceUnit "m"^^xsd:string .
+
+ex:Conventional_Tube_Boom a ex:CraneComponent ;
+    rdfs:label "Conventional Tube Boom"^^xsd:string ;
+    rdfs:comment "The main lattice boom structure made of tubular chord sections that can be extended using extensions for increased reach and capacity configurations."^^xsd:string ;
+    ex:ComponentOf ex:HSL_Crawler_Crane_Link-Belt_Cranes_248_HSL ;
+    ex:maintenanceIntervalCheck "1000"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxBoomLength "86.87"^^xsd:float ;
+    ex:maxBoomLengthUnit "m"^^xsd:string .
+
+ex:Engine a ex:CraneComponent ;
+    rdfs:label "Engine"^^xsd:string ;
+    rdfs:comment "The prime mover in the crane’s upper structure that converts fuel into mechanical energy for powering all crane functions."^^xsd:string ;
+    ex:ComponentOf ex:HSL_Crawler_Crane_Link-Belt_Cranes_248_HSL ;
+    ex:DependsOn ex:Fuel_Tank ;
+    ex:maintenanceIntervalCheck "600"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxEngineRpmAtFullLoadSpeed "2000"^^xsd:float ;
+    ex:maxEngineRpmAtFullLoadSpeedUnit "rpm"^^xsd:string .
+
+ex:Fuel_Tank a ex:CraneComponent ;
+    rdfs:label "Fuel Tank"^^xsd:string ;
+    rdfs:comment "The reservoir storing diesel fuel for the engine, equipped with a sight gauge for fuel level."^^xsd:string ;
+    ex:fuelTankCapacity "460"^^xsd:float ;
+    ex:fuelTankCapacityUnit "L"^^xsd:string ;
+    ex:maintenanceIntervalCheck "800"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string .
+
+ex:Jack_System a ex:CraneComponent ;
+    rdfs:label "Jack System"^^xsd:string .
+
+ex:Lower_Structure a ex:CraneComponent ;
+    rdfs:label "Lower Structure"^^xsd:string ;
+    ex:ComponentOf ex:HSL_Crawler_Crane_Link-Belt_Cranes_248_HSL .
+
+ex:Luffing_Boom a ex:CraneComponent ;
+    rdfs:label "Luffing Boom"^^xsd:string ;
+    rdfs:comment "A boom configuration featuring pivot points and pendants allowing a higher operating angle range, typically used with a luffing jib for heavy and high lifts."^^xsd:string ;
+    ex:ComponentOf ex:HSL_Crawler_Crane_Link-Belt_Cranes_248_HSL ;
+    ex:maintenanceIntervalCheck "1500"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxLuffingBoomLength "48.77"^^xsd:float ;
+    ex:maxLuffingBoomLengthUnit "m"^^xsd:string .
+
+ex:Upper_Structure a ex:CraneComponent ;
+    rdfs:label "Upper Structure"^^xsd:string ;
+    ex:ComponentOf ex:HSL_Crawler_Crane_Link-Belt_Cranes_248_HSL .
+
+ex:HSL_Crawler_Crane_Link-Belt_Cranes_248_HSL a ex:CraneComponent ;
+    rdfs:label "HSL Crawler Crane 248"^^xsd:string .
+
+ex:Hydraulic_System a ex:CraneComponent ;
+    rdfs:label "Hydraulic System"^^xsd:string ;
+    rdfs:comment "The collection of pumps, motors, valves, hoses, and reservoirs that provide hydraulic power to the crane’s hoist, boom, swing, and travel functions."^^xsd:string ;
+    ex:ComponentOf ex:HSL_Crawler_Crane_Link-Belt_Cranes_248_HSL ;
+    ex:DependsOn ex:Engine ;
+    ex:maintenanceIntervalCheck "750"^^xsd:float ;
+    ex:maintenanceIntervalCheckUnit "working hours"^^xsd:string ;
+    ex:maxHydraulicPressure "314"^^xsd:float ;
+    ex:maxHydraulicPressureUnit "bar"^^xsd:string .
+
+ex:CraneComponent a owl:Class .
+
