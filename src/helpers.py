@@ -4,8 +4,9 @@ from rdflib.namespace import XSD, OWL
 from rdflib.namespace import RDF, RDFS, XSD
 #from SPARQLWrapper import SPARQLWrapper, JSON
 #import sqlite3
+from typing import Tuple
 
-def json_to_owl(json_data, namespace: str):
+def json_to_owl(json_data: dict, namespace: str):
     """
     Converts the given JSON (with 'terms' and 'relations') into an OWL knowledge graph using rdflib.
     The 'additionalInformation' field is split into individual data properties, extracting numeric values and units.
@@ -72,7 +73,7 @@ def json_to_owl(json_data, namespace: str):
                 # e.g., "266 L/min" => number=266, unit="L/min"
                 # or "1000 working hours" => number=1000, unit="working hours"
 
-                # A simple approach using regex:
+                # An approach using regex:
                 #   group 1: numeric part (float or int)
                 #   group 2: everything else for the unit
                 match = re.match(r"^([\d\.]+)\s*(.*)$", value)
@@ -134,7 +135,7 @@ def json_to_owl(json_data, namespace: str):
     return g
 
 
-def parse_rdf_constraints(output_file):
+def parse_rdf_constraints(output_file: str):
     """
     Parse the RDF input and return a dictionary with component -> constraint values,
     retaining both numeric values and their units (if present).
@@ -157,7 +158,7 @@ def parse_rdf_constraints(output_file):
     # }
     constraints = {}
 
-    def ensure_component_property_dict(comp, prop):
+    def ensure_component_property_dict(comp: str, prop: str):
         """
         Helper to ensure constraints[comp][prop] is at least an empty dict.
         """
@@ -209,7 +210,7 @@ def parse_rdf_constraints(output_file):
     return constraints
 
 
-def extract_relevant_constraints(component_constraints):
+def extract_relevant_constraints(component_constraints: dict):
     """
     Return a list of potential (sensor_name, max_value, min_value)
     that we can generate telemetry for.
@@ -218,7 +219,7 @@ def extract_relevant_constraints(component_constraints):
     """
     relevant_sensors = []
 
-    # A simple parser that looks for any key that starts with "max" or "min" or ends with "Capacity"
+    # A parser that looks for any key that starts with "max" or "min" or ends with "Capacity"
     for k, v in component_constraints.items():
         if not isinstance(v, dict):
             continue
@@ -243,14 +244,14 @@ def extract_relevant_constraints(component_constraints):
     return relevant_sensors
 
 
-def load_constraints(ttl_file):
+def load_constraints(ttl_file: str):
     """Load owl encoded constraints from a file into an RDF graph"""
     g = Graph()
     g.parse(ttl_file, format="turtle")
     return g
 
 
-def get_constraints(graph, component_uri):
+def get_constraints(graph: Graph, component_uri: str):
     """Execute SPARQL query on the graph to retrieve constraints"""
     query = f"""
     PREFIX ex: <urn:crawlercrane-ontology#> 
@@ -282,7 +283,7 @@ def get_constraints(graph, component_uri):
     return constraints
 
 
-def check_constraints_for_row(row, constraints_dict):
+def check_constraints_for_row(row: Tuple[int, str, str, str, str, float, str], constraints_dict: dict):
     """Check telemetry row against constraints"""
     row_id, ts, machine_id, component, sensor_name, sensor_value, sensor_unit = row
 
