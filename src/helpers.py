@@ -1,7 +1,9 @@
 import re
 from rdflib import Graph, Namespace, Literal, RDF, RDFS, URIRef
 from rdflib.namespace import XSD, OWL
-
+from rdflib.namespace import RDF, RDFS, XSD
+#from SPARQLWrapper import SPARQLWrapper, JSON
+#import sqlite3
 
 def json_to_owl(json_data, namespace: str):
     """
@@ -239,3 +241,77 @@ def extract_relevant_constraints(component_constraints):
             sensor_name = k.replace("Capacity", "Level").lower()
             relevant_sensors.append((k, sensor_name, val, 0.0))
     return relevant_sensors
+
+
+def load_constraints(ttl_file):
+    """Load owl encoded constraints from a file into an RDF graph"""
+    g = Graph()
+    g.parse(ttl_file, format="turtle")
+    return g
+
+
+def get_constraints(graph, component_uri):
+    """Execute SPARQL query on the graph to retrieve constraints"""
+    query = f"""
+    PREFIX ex: <urn:crawlercrane-ontology#> 
+    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+    PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    
+    SELECT ?constraintKey ?constraintValue ?constraintUnit
+    WHERE {{
+        <{component_uri}> ?constraintKey ?constraintValue .
+        OPTIONAL {{
+            ?constraintKey ex:unit ?constraintUnit .
+        }}
+        FILTER (
+            CONTAINS(STR(?constraintKey), "min") ||
+            CONTAINS(STR(?constraintKey), "max") ||
+            CONTAINS(STR(?constraintKey), "maintenanceIntervalCheck")
+        )
+    }}
+    """
+    results = graph.query(query)
+
+    constraints = {}
+    for row in results:
+        key = str(row["constraintKey"])
+        value = float(row["constraintValue"]) if isinstance(row["constraintValue"], float) else str(row["constraintValue"])
+        unit = str(row["constraintUnit"]) if row["constraintUnit"] else None
+        constraints[key] = {"value": value, "unit": unit}
+    return constraints
+
+
+def check_constraints_for_row(row, constraints_dict):
+    """Check telemetry row against constraints"""
+    row_id, ts, machine_id, component, sensor_name, sensor_value, sensor_unit = row
+
+    if not constraints_dict:
+        # No constraints found; assume valid
+        return True
+
+    for constraint_key, constraint_info in constraints_dict.items():
+        constraint_val = constraint_info["value"]
+        constraint_unit = constraint_info["unit"]
+
+        # Check for unit compatibility
+        if sensor_unit != constraint_unit and constraint_unit:
+            # Handle unit conversion here if necessary
+            continue
+
+        # Ensure `constraint_val` is float if it's numeric
+        try:
+            constraint_val = float(constraint_val)
+        except ValueError:
+            # If the constraint value is not numeric, skip this constraint
+            continue
+
+        # Apply constraint checks
+        if "max" in constraint_key.lower() and sensor_value > constraint_val:
+            return False
+        if "min" in constraint_key.lower() and sensor_value < constraint_val:
+            return False
+        if "maintenanceIntervalCheck" in constraint_key.lower() and sensor_value > constraint_val:
+            return False
+
+    return True
